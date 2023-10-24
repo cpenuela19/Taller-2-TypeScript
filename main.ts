@@ -2,17 +2,12 @@
 
 import { series } from './data.js'; 
 import { Serie } from './Serie.js';
-for (const serie of series) {
-  console.log(`Título: ${serie.name}`);
-  console.log(`Canal: ${serie.channel}`);
-  console.log(`Temporadas: ${serie.seasons}`);
-  console.log(`Descripción: ${serie.description}`);
-  console.log(`Enlace al sitio web: ${serie.chLink}`);
-  console.log(`Enlace a la imagen: ${serie.image}`);
-  console.log('---');
-}
 
 let seriesTable: HTMLElement = document.getElementById("series")!;
+let picAlter:HTMLElement = document.getElementById('image')!;
+let titleAlter:HTMLElement = document.getElementById("title")!;
+let descriptionAlter: HTMLElement = document.getElementById("description")!;
+let linkAlter: HTMLElement = document.getElementById('channelLink')!;
 mostrarSeries(series);
 
 function mostrarSeries(series: Serie[]): void{
@@ -24,7 +19,7 @@ function mostrarSeries(series: Serie[]): void{
     {
         let trElement: HTMLElement = document.createElement("tr");
         trElement.innerHTML = ` <td><strong>${serie.id}<strong></td>
-                                <td>${serie.name}</td>
+                                <td style = "color:#547dde;"><a id = "${serie.id}">${serie.name}</a></td>
                                 <td>${serie.channel}</td>
                                 <td>${serie.seasons}</td>`;
         seriesTbody.appendChild(trElement);
@@ -40,5 +35,31 @@ function mostrarSeries(series: Serie[]): void{
     let averageRow: HTMLElement = document.createElement("tr");
     averageRow.innerHTML = `Seasons average: ${average}`;
     seriesTbody.appendChild(averageRow);
-
 }
+
+botones();
+function botones(): void{
+    for (let i = 0; i < series.length; i++) {
+        const x = series[i];
+        const boton = document.getElementById(`${x.id}`);
+        if (boton) {
+            boton.addEventListener('click', () => mostrarSeriesDinamico(boton.id));
+        }
+    }
+}
+
+function mostrarSeriesDinamico(id: string){
+    const actual = parseInt(id);
+    const serie = series[actual - 1];
+
+    if (serie) {
+        picAlter.setAttribute('src', serie.image);
+        titleAlter.innerHTML = serie.name;
+        descriptionAlter.innerHTML = serie.description;
+        linkAlter.setAttribute('href', serie.chLink);
+        linkAlter.innerHTML = serie.chLink;
+    }
+}
+
+
+
